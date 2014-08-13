@@ -1,0 +1,1039 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Gesamtreport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="550" leftMargin="25" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="21a3fd22-b25d-4cc1-8704-634a1a54ecbb">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="20"/>
+	<subDataset name="WasserDataset" uuid="cf1c101d-33aa-4f5a-bc52-75be0150ca88">
+		<parameter name="obid" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA[144]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitstempel" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA["2014-07-23"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitmodus" class="java.lang.Integer" isForPrompting="false">
+			<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT obid,unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes and mename='Wasser' or mename='H2O') as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes ) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempel},obid, $P{zeitmodus}, 2)) as Verbrauch,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 2)) as Zeitstempel,
+(select Verbrauch*kosten_des_mediums_des_elternobjektes) as Kosten
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and obEinheitZ = unId
+union all
+SELECT obid,unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes and mename='Wasser' or mename='H2O') as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempel},obid, $P{zeitmodus}, 1)) as Verbrauch,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 1)) as Zeitstempel,
+(select Verbrauch*kosten_des_mediums_des_elternobjektes) as Kosten
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and obEinheitZ = unId]]>
+		</queryString>
+		<field name="obid" class="java.lang.Long">
+			<fieldDescription><![CDATA[Eindeutige Id des Objektes]]></fieldDescription>
+		</field>
+		<field name="unName" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="obAbkuerzung" class="java.lang.String">
+			<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="obArbeitsaequivalent" class="java.lang.Double">
+			<fieldDescription><![CDATA[Messung: Arbeitsäquivalent]]></fieldDescription>
+		</field>
+		<field name="obname" class="java.lang.String">
+			<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="get_tree(obid)" class="java.lang.String"/>
+		<field name="id_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_elternobjektes" class="java.lang.String"/>
+		<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+		<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+		<field name="Verbrauch" class="java.lang.Double"/>
+		<field name="Zeitstempel" class="java.lang.String"/>
+		<field name="Kosten" class="java.lang.Double"/>
+		<variable name="total" class="java.lang.Double" resetType="Group" resetGroup="Medium" calculation="Sum">
+			<variableExpression><![CDATA[$F{Verbrauch}]]></variableExpression>
+		</variable>
+		<group name="Medium">
+			<groupExpression><![CDATA[$F{medienid_des_elternobjektes}]]></groupExpression>
+		</group>
+	</subDataset>
+	<subDataset name="DatasetMedium1" uuid="562118b8-0e63-4d9a-870a-e80ae1df659a">
+		<parameter name="mediumid1" class="java.lang.Integer" isForPrompting="false">
+			<defaultValueExpression><![CDATA[25]]></defaultValueExpression>
+		</parameter>
+		<parameter name="obid" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA[144]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitstempelmedium1" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA["2014-07-23"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitmodusmedium1" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT obid, unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes ) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempelmedium1}, obid , $P{zeitmodusmedium1}, 2)) as Realverbrauch,
+(select get_diff($P{zeitstempelmedium1}, obid , $P{zeitmodusmedium1}, 2)*obArbeitsaequivalent) as Verbrauch,
+(select get_timestamp($P{zeitstempelmedium1}, $P{zeitmodusmedium1}, 2)) as Zeitstempel,
+(select Realverbrauch*kosten_des_mediums_des_elternobjektes) as Kosten
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{mediumid1}) and obEinheitZ = unId
+union all
+SELECT obid, unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes ) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempelmedium1}, obid , $P{zeitmodusmedium1}, 1)) as Realverbrauch,
+(select get_diff($P{zeitstempelmedium1}, obid , $P{zeitmodusmedium1}, 1)*obArbeitsaequivalent) as Verbrauch,
+(select get_timestamp($P{zeitstempelmedium1}, $P{zeitmodusmedium1}, 1)) as Zeitstempel,
+(select Realverbrauch*kosten_des_mediums_des_elternobjektes) as Kosten
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{mediumid1}) and obEinheitZ = unId]]>
+		</queryString>
+		<field name="obid" class="java.lang.Long">
+			<fieldDescription><![CDATA[Eindeutige Id des Objektes]]></fieldDescription>
+		</field>
+		<field name="unName" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="obAbkuerzung" class="java.lang.String">
+			<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="obArbeitsaequivalent" class="java.lang.Double">
+			<fieldDescription><![CDATA[Messung: Arbeitsäquivalent]]></fieldDescription>
+		</field>
+		<field name="obname" class="java.lang.String">
+			<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="get_tree(obid)" class="java.lang.String"/>
+		<field name="id_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_elternobjektes" class="java.lang.String"/>
+		<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+		<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+		<field name="Realverbrauch" class="java.lang.Double"/>
+		<field name="Verbrauch" class="java.lang.Double"/>
+		<field name="Zeitstempel" class="java.lang.String"/>
+		<field name="Kosten" class="java.lang.Double"/>
+	</subDataset>
+	<subDataset name="DatasetMedium2" uuid="953b2dbe-4d12-4a43-88c0-148dcf8b815c">
+		<parameter name="mediumid2" class="java.lang.Integer" isForPrompting="false">
+			<defaultValueExpression><![CDATA[30]]></defaultValueExpression>
+		</parameter>
+		<parameter name="obid" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA[144]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitstempelmedium2" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA["2014-07-23"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitmodusmedium2" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT obid, unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes ) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempelmedium2}, obid , $P{zeitmodusmedium2}, 2)) as Realverbrauch,
+(select get_diff($P{zeitstempelmedium2}, obid , $P{zeitmodusmedium2}, 2)*obArbeitsaequivalent) as Verbrauch,
+(select get_timestamp($P{zeitstempelmedium2}, $P{zeitmodusmedium2}, 2)) as Zeitstempel,
+(select Realverbrauch*kosten_des_mediums_des_elternobjektes) as Kosten
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{mediumid2}) and obEinheitZ = unId
+union all
+SELECT obid, unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes ) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempelmedium2}, obid , $P{zeitmodusmedium2}, 1)) as Realverbrauch,
+(select get_diff($P{zeitstempelmedium2}, obid , $P{zeitmodusmedium2}, 1)*obArbeitsaequivalent) as Verbrauch,
+(select get_timestamp($P{zeitstempelmedium2}, $P{zeitmodusmedium2}, 1)) as Zeitstempel,
+(select Realverbrauch*kosten_des_mediums_des_elternobjektes) as Kosten
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{mediumid2}) and obEinheitZ = unId]]>
+		</queryString>
+		<field name="obid" class="java.lang.Long">
+			<fieldDescription><![CDATA[Eindeutige Id des Objektes]]></fieldDescription>
+		</field>
+		<field name="unName" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="obAbkuerzung" class="java.lang.String">
+			<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="obArbeitsaequivalent" class="java.lang.Double">
+			<fieldDescription><![CDATA[Messung: Arbeitsäquivalent]]></fieldDescription>
+		</field>
+		<field name="obname" class="java.lang.String">
+			<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="get_tree(obid)" class="java.lang.String"/>
+		<field name="id_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_elternobjektes" class="java.lang.String"/>
+		<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+		<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+		<field name="Realverbrauch" class="java.lang.Double"/>
+		<field name="Verbrauch" class="java.lang.Double"/>
+		<field name="Zeitstempel" class="java.lang.String"/>
+		<field name="Kosten" class="java.lang.Double"/>
+	</subDataset>
+	<subDataset name="DatasetMedium3" uuid="c6a9f989-8683-4756-9848-dcdce626eb27">
+		<parameter name="mediumid3" class="java.lang.Integer" isForPrompting="false">
+			<defaultValueExpression><![CDATA[30]]></defaultValueExpression>
+		</parameter>
+		<parameter name="obid" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA[144]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitstempelmedium3" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA["2014-07-23"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitmodusmedium3" class="java.lang.String" isForPrompting="false">
+			<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT obid, unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes ) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempelmedium3}, obid , $P{zeitmodusmedium3}, 2)) as Realverbrauch,
+(select get_diff($P{zeitstempelmedium3}, obid , $P{zeitmodusmedium3}, 2)*obArbeitsaequivalent) as Verbrauch,
+(select get_timestamp($P{zeitstempelmedium3}, $P{zeitmodusmedium3}, 2)) as Zeitstempel,
+(select Realverbrauch*kosten_des_mediums_des_elternobjektes) as Kosten
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{mediumid3}) and obEinheitZ = unId
+union all
+SELECT obid, unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes ) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempelmedium3}, obid , $P{zeitmodusmedium3}, 1)) as Realverbrauch,
+(select get_diff($P{zeitstempelmedium3}, obid , $P{zeitmodusmedium3}, 1)*obArbeitsaequivalent) as Verbrauch,
+(select get_timestamp($P{zeitstempelmedium3}, $P{zeitmodusmedium3}, 1)) as Zeitstempel,
+(select Realverbrauch*kosten_des_mediums_des_elternobjektes) as Kosten
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{mediumid3}) and obEinheitZ = unId]]>
+		</queryString>
+		<field name="obid" class="java.lang.Long">
+			<fieldDescription><![CDATA[Eindeutige Id des Objektes]]></fieldDescription>
+		</field>
+		<field name="unName" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="obAbkuerzung" class="java.lang.String">
+			<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="obArbeitsaequivalent" class="java.lang.Double">
+			<fieldDescription><![CDATA[Messung: Arbeitsäquivalent]]></fieldDescription>
+		</field>
+		<field name="obname" class="java.lang.String">
+			<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="get_tree(obid)" class="java.lang.String"/>
+		<field name="id_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_elternobjektes" class="java.lang.String"/>
+		<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+		<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+		<field name="Realverbrauch" class="java.lang.Double"/>
+		<field name="Verbrauch" class="java.lang.Double"/>
+		<field name="Zeitstempel" class="java.lang.String"/>
+		<field name="Kosten" class="java.lang.Double"/>
+	</subDataset>
+	<parameter name="obid" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[144]]></defaultValueExpression>
+	</parameter>
+	<parameter name="creatorName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Inna Nickel"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reporttitel" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["EnergyWeb Energieverbrauch Report"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="recepientName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Inna Nickel"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="comment" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Hier ist der Platz für Ihre Kommentare"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="medium" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[25]]></defaultValueExpression>
+	</parameter>
+	<parameter name="medium1" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[30]]></defaultValueExpression>
+	</parameter>
+	<parameter name="medium2" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[31]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\inickel\\TENAG_Logo.JPG"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="zeitstempel" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["2014-06-16"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="zeitmodus" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT obid,unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes and meid!=29) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes ) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempel},obid, $P{zeitmodus}, 2)) as Realverbrauch,
+(select get_diff($P{zeitstempel},obid, $P{zeitmodus}, 2)*obArbeitsaequivalent) as Verbrauch,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 2)) as Zeitstempel,
+(select Realverbrauch*kosten_des_mediums_des_elternobjektes) as Kosten,
+(select obName from objekt where obid=$P{obid}) as Bereich,
+(select mename from media where meid = $P{medium}) as Mediumname1,
+(select mename from media where meid = $P{medium1}) as Mediumname2,
+(select mename from media where meid = $P{medium2}) as Mediumname3
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and obEinheitZ = unId
+union all
+SELECT obid,unName, obAbkuerzung, obArbeitsaequivalent,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes and meid!=29) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempel},obid, $P{zeitmodus}, 1)) as Realverbrauch,
+(select get_diff($P{zeitstempel},obid, $P{zeitmodus}, 1)*obArbeitsaequivalent) as Verbrauch,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 1)) as Zeitstempel,
+(select Realverbrauch*kosten_des_mediums_des_elternobjektes) as Kosten,
+(select obName from objekt where obid=$P{obid}) as Bereich,
+(select mename from media where meid = $P{medium}) as Mediumname1,
+(select mename from media where meid = $P{medium1}) as Mediumname2,
+(select mename from media where meid = $P{medium2}) as Mediumname3
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and obEinheitZ = unId]]>
+	</queryString>
+	<field name="obid" class="java.lang.Long">
+		<fieldDescription><![CDATA[Eindeutige Id des Objektes]]></fieldDescription>
+	</field>
+	<field name="unName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="obAbkuerzung" class="java.lang.String">
+		<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+	</field>
+	<field name="obArbeitsaequivalent" class="java.lang.Double">
+		<fieldDescription><![CDATA[Messung: Arbeitsäquivalent]]></fieldDescription>
+	</field>
+	<field name="obname" class="java.lang.String">
+		<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+	</field>
+	<field name="get_tree(obid)" class="java.lang.String"/>
+	<field name="id_des_elternobjektes" class="java.lang.Long"/>
+	<field name="name_des_elternobjektes" class="java.lang.String"/>
+	<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+	<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+	<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+	<field name="Realverbrauch" class="java.lang.Double"/>
+	<field name="Verbrauch" class="java.lang.Double"/>
+	<field name="Zeitstempel" class="java.lang.String"/>
+	<field name="Kosten" class="java.lang.Double"/>
+	<field name="Bereich" class="java.lang.String"/>
+	<field name="Mediumname1" class="java.lang.String"/>
+	<field name="Mediumname2" class="java.lang.String"/>
+	<field name="Mediumname3" class="java.lang.String"/>
+	<sortField name="Verbrauch"/>
+	<filterExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=""]]></filterExpression>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="770" splitType="Stretch">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="77" width="277" height="51" forecolor="#999999" uuid="62a5e776-59ee-42d6-a977-acc0cad06e5a"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reportersteller: "+$P{creatorName}+"\n"+"E-Mail: inna.nickel@tenag.de"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="56" width="447" height="21" forecolor="#8CA9BB" uuid="346935d6-e1df-4ca7-b8df-654b19b42eae"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reporttitel}+": "+$F{Bereich}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="287" y="77" width="277" height="51" forecolor="#999999" uuid="1c613303-bfad-41b1-b697-e179ab23eb81"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reportempfänger: "+$P{recepientName}+"\n"+"E-Mail: julian.gabriel@tenag.de"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="56" backcolor="#8CA9BB" uuid="b65bf92d-9ada-42e4-b31c-ee1ae4c45839"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<image evaluationTime="Report">
+				<reportElement x="482" y="0" width="177" height="57" uuid="e9a783d5-2136-44ea-8386-054fbb94bdcb"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="76" width="555" height="1" forecolor="#8CA9BB" uuid="1c16535b-2b7f-4fd1-8cb4-678c2b62ffb5"/>
+				<graphicElement>
+					<pen lineWidth="1.75"/>
+				</graphicElement>
+			</line>
+			<barChart>
+				<chart evaluationTime="Report" customizerClass="jasper.ChartCustomizer" renderType="draw" theme="aegean">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="151" width="277" height="186" uuid="2c5a79d9-c840-4bae-82e8-56ec7063c3f8"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom">
+						<font fontName="Arial" size="5"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Verbrauch}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel>
+						<font fontName="Arial" size="5"/>
+					</itemLabel>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA[$F{unName}]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+			<barChart>
+				<chart evaluationTime="Report" customizerClass="jasper.ChartCustomizer" renderType="draw" theme="aegean">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="287" y="151" width="277" height="186" uuid="39ce6355-09dc-41f6-ad46-d88936ccd8f9"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Kosten}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisLabelExpression><![CDATA[java.util.Currency.getInstance(Locale.GERMANY).getSymbol()]]></valueAxisLabelExpression>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="0" y="131" width="277" height="20" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="a36222a8-438f-45e6-b480-a23e556827ff"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Energieverbrauch: Alle Energiemedien"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="287" y="131" width="277" height="20" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="1ebc5de5-8a0c-4186-8f11-fb06e09adb28"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Energiekosten: Alle Energiemedien"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="1" y="559" width="278" height="20" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="98107faa-e84d-44ce-8b92-dcb800dc1c40"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Energiverbrauch / Energiekosten"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="288" y="345" width="277" height="20" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="0d99edea-80f6-44db-85b6-e9a75f8ba950"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Energiverbrauch / Energiekosten"]]></textFieldExpression>
+			</textField>
+			<multiAxisChart>
+				<chart isShowLegend="false" evaluationTime="Report" customizerClass="jasper.MultiLineChartCustomizerBarChart" renderType="draw" theme="aegean">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="365" width="277" height="186" uuid="1c4e7a9e-8f6a-4a1b-98c9-0918f5ac3e1b"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<multiAxisPlot>
+					<plot/>
+					<axis>
+						<barChart>
+							<chart isShowLegend="true" evaluationTime="Report" renderType="draw" theme="aegean">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="1efa3e4c-7741-457f-ba14-d34e9f6cd54b"/>
+								<chartTitle color="#000000">
+									<titleExpression><![CDATA["Wasser"]]></titleExpression>
+								</chartTitle>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+									<datasetRun subDataset="WasserDataset" uuid="a5000ffb-619f-4fbb-acff-8d3eef3c49f3">
+										<datasetParameter name="obid">
+											<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempel">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodus">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Verbrauch}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisLabelExpression><![CDATA[]]></categoryAxisLabelExpression>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA["m³"]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+					<axis>
+						<barChart>
+							<chart isShowLegend="false" evaluationTime="Report" customizerClass="jasper.MultiAxisBarChartCustomizer" renderType="draw" theme="aegean">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="133ca9b4-6abb-4128-8e0b-1720c4ee64b5"/>
+								<chartTitle color="#000000"/>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+									<datasetRun subDataset="WasserDataset" uuid="0e247041-db51-475c-8353-be35bead7ba9">
+										<datasetParameter name="obid">
+											<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempel">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodus">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Kosten}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisLabelExpression><![CDATA[$F{Mediumname1}]]></categoryAxisLabelExpression>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[java.util.Currency.getInstance(Locale.GERMANY).getSymbol()]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+				</multiAxisPlot>
+			</multiAxisChart>
+			<multiAxisChart>
+				<chart evaluationTime="Report" customizerClass="jasper.MultiLineChartCustomizerBarChart" renderType="draw" theme="aegean">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="288" y="365" width="277" height="186" uuid="2024d46d-2e84-4e37-9f62-285d9856da88"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<multiAxisPlot>
+					<plot/>
+					<axis>
+						<barChart>
+							<chart isShowLegend="true" evaluationTime="Report" renderType="draw" theme="aegean">
+								<reportElement x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="1100f9af-04d8-48d8-a4a4-0d7f852f5b59"/>
+								<chartTitle color="#000000">
+									<titleExpression><![CDATA[$F{Mediumname1}]]></titleExpression>
+								</chartTitle>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+									<datasetRun subDataset="DatasetMedium1" uuid="858d5836-9e11-4b33-833c-c83f57fccfdb">
+										<datasetParameter name="obid">
+											<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="mediumid1">
+											<datasetParameterExpression><![CDATA[$P{medium}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempelmedium1">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodusmedium1">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Verbrauch}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[$F{unName}]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat>
+										<labelFont>
+											<font fontName="Arial" size="5"/>
+										</labelFont>
+									</axisFormat>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+					<axis>
+						<barChart>
+							<chart isShowLegend="true" evaluationTime="Report" customizerClass="jasper.MultiAxisBarChartCustomizer" renderType="draw" theme="aegean">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="70f64481-fb83-4588-becb-c64f574415f2"/>
+								<chartTitle color="#000000">
+									<titleExpression><![CDATA[$F{Mediumname1}]]></titleExpression>
+								</chartTitle>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+									<datasetRun subDataset="DatasetMedium1" uuid="fe00703f-0a71-4bec-a43b-b5731462ac88">
+										<datasetParameter name="obid">
+											<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="mediumid1">
+											<datasetParameterExpression><![CDATA[$P{medium}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempelmedium1">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodusmedium1">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Kosten}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisLabelExpression><![CDATA[]]></categoryAxisLabelExpression>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[java.util.Currency.getInstance(Locale.GERMANY).getSymbol()]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat>
+										<labelFont>
+											<font fontName="Arial" size="5"/>
+										</labelFont>
+									</axisFormat>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+				</multiAxisPlot>
+			</multiAxisChart>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="0" y="345" width="277" height="20" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="971571ab-7efe-4bbe-abbb-394e42ce1a1a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Energiverbrauch / Energiekosten"]]></textFieldExpression>
+			</textField>
+			<multiAxisChart>
+				<chart isShowLegend="false" evaluationTime="Report" customizerClass="jasper.MultiLineChartCustomizerBarChart" renderType="draw" theme="aegean">
+					<reportElement x="1" y="579" width="278" height="186" uuid="38a99857-936a-4bdf-8c84-c693e909c0c3"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<multiAxisPlot>
+					<plot/>
+					<axis>
+						<barChart>
+							<chart evaluationTime="Report" renderType="draw" theme="aegean">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="fb3d6771-1088-4be6-8627-d651a2d13536"/>
+								<chartTitle color="#000000">
+									<titleExpression><![CDATA[$F{Mediumname2}]]></titleExpression>
+								</chartTitle>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+									<datasetRun subDataset="DatasetMedium2" uuid="467a427d-a2ee-4dcc-b062-3a151d5cd88f">
+										<datasetParameter name="obid">
+											<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="mediumid2">
+											<datasetParameterExpression><![CDATA[$P{medium1}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempelmedium2">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodusmedium2">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Verbrauch}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[$F{unName}]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+					<axis>
+						<barChart>
+							<chart isShowLegend="false" evaluationTime="Report" customizerClass="jasper.MultiAxisBarChartCustomizer" renderType="draw" theme="aegean">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="94752384-8c18-473f-9c13-3b50b88fe0f5"/>
+								<chartTitle color="#000000"/>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+									<datasetRun subDataset="DatasetMedium2" uuid="7eb6abfd-f8c9-47dc-8905-37b7827a910e">
+										<datasetParameter name="obid">
+											<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="mediumid2">
+											<datasetParameterExpression><![CDATA[$P{medium1}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempelmedium2">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodusmedium2">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Kosten}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[java.util.Currency.getInstance(Locale.GERMANY).getSymbol()]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+				</multiAxisPlot>
+			</multiAxisChart>
+			<multiAxisChart>
+				<chart isShowLegend="false" evaluationTime="Report" customizerClass="jasper.MultiLineChartCustomizerBarChart" renderType="draw" theme="aegean">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="288" y="579" width="278" height="186" uuid="9b01b41d-59cd-482f-823e-ad45ac536ec1"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<multiAxisPlot>
+					<plot/>
+					<axis>
+						<barChart>
+							<chart evaluationTime="Report" renderType="draw" theme="aegean">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="eedb1e2c-a6ec-4d16-b59d-2378b8b6ecb3"/>
+								<chartTitle color="#000000">
+									<titleExpression><![CDATA[$F{Mediumname3}]]></titleExpression>
+								</chartTitle>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+									<datasetRun subDataset="DatasetMedium3" uuid="304caf4f-1a37-4e4f-9d0b-b76639c72a7c">
+										<datasetParameter name="obid">
+											<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="mediumid3">
+											<datasetParameterExpression><![CDATA[$P{medium2}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempelmedium3">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodusmedium3">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Verbrauch}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[$F{unName}]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+					<axis>
+						<barChart>
+							<chart isShowLegend="true" evaluationTime="Report" customizerClass="jasper.MultiAxisBarChartCustomizer" renderType="draw" theme="aegean">
+								<reportElement x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="c8cb658c-7484-4085-b99a-794c538ff359"/>
+								<chartTitle color="#000000"/>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<incrementWhenExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}!=null]]></incrementWhenExpression>
+									<datasetRun subDataset="DatasetMedium3" uuid="8319fc98-1c7b-4a60-bcef-4df83edfb3e1">
+										<datasetParameter name="mediumid3">
+											<datasetParameterExpression><![CDATA[$P{medium2}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="obid">
+											<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempelmedium3">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodusmedium3">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Kosten}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[java.util.Currency.getInstance(Locale.GERMANY).getSymbol()]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+				</multiAxisPlot>
+			</multiAxisChart>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="288" y="559" width="278" height="20" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="0b4de883-65ee-48c5-8bb2-e57383426660"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Energiverbrauch / Energiekosten"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageFooter>
+		<band height="24" splitType="Stretch">
+			<textField evaluationTime="Report" pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="103" height="20" forecolor="#8CA9BB" uuid="d6bad34a-0d9b-4994-a977-833728ed30b7"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="521" y="2" width="45" height="20" forecolor="#8CA9BB" uuid="fe2abe9b-468e-4d79-8b5f-2bf417454ae1"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="33" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="101" y="1" width="464" height="24" forecolor="#CCCCCC" uuid="f3e9e837-97b8-4e8a-beb9-7b72ffd68169"/>
+				<textFieldExpression><![CDATA[$P{comment}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="100" height="24" forecolor="#8CA9BB" backcolor="#FFFFFF" uuid="5693036c-f9b6-40e7-ae4b-c77bfcca14df"/>
+				<textElement textAlignment="Left" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="true" isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Kommentar:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="564" height="1" forecolor="#000000" uuid="32b7338d-72dd-4787-9d55-6d3750bca30e"/>
+				<graphicElement>
+					<pen lineWidth="1.75" lineStyle="Double" lineColor="#8CA9BB"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

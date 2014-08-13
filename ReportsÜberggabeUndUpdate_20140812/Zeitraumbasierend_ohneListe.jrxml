@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Zeitraumbasierend" pageWidth="595" pageHeight="842" columnWidth="550" leftMargin="25" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8a873c51-1020-447d-bca1-30d2dd57fea7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="Dataset2" uuid="cf6ce240-b881-4954-bccc-e1a8a2bdef57">
+		<parameter name="zeitstempelDataset2" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2014-07-23"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitmodus" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<parameter name="obidDataset2" class="java.lang.Integer" isForPrompting="false">
+			<defaultValueExpression><![CDATA[2046]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[call get_diffxachse($P{zeitstempelDataset2}, $P{obidDataset2}, $P{zeitmodus})]]>
+		</queryString>
+		<field name="obAbkuerzung" class="java.lang.String">
+			<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="obName" class="java.lang.String">
+			<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="unName" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="teZeitstempel" class="java.sql.Timestamp">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="teZeitstempel1" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="teZeitstempel2" class="java.sql.Timestamp">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="teObjektId" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="teWert" class="java.lang.Double">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="teZeitmodus" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="teZeitraum" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="id_des_elternobjektes" class="java.lang.Long"/>
+		<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+		<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+		<field name="Bereich" class="java.lang.String"/>
+		<variable name="dateformat" class="java.lang.String">
+			<variableExpression><![CDATA[$F{teZeitstempel1}]]></variableExpression>
+		</variable>
+		<variable name="obname" class="java.lang.String">
+			<variableExpression><![CDATA[$F{obName}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="zeitstempel" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["2014-07-23"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="obid" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[2049]]></defaultValueExpression>
+	</parameter>
+	<parameter name="zeitmodus" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\inickel\\TENAG_Logo.JPG"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reporttitel" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["EnergyWeb Report"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="recepientName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Inna Nickell"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="emailrecepient" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["inna.nickel@tenag.de"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="creatorName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Inna Nickel"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="emailcreator" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["inna.nickel@tenag.de"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="comment" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Hier ist der Platz für Ihre Kommentare"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="zeitstempel2" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["2014-06-23"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="obid2" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[2046]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[call get_diffxachse($P{zeitstempel}, $P{obid}, $P{zeitmodus})]]>
+	</queryString>
+	<field name="obAbkuerzung" class="java.lang.String">
+		<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+	</field>
+	<field name="obName" class="java.lang.String">
+		<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+	</field>
+	<field name="unName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="teZeitstempel" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="teZeitstempel1" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="teZeitstempel2" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="teObjektId" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="teWert" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="teZeitmodus" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="teZeitraum" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id_des_elternobjektes" class="java.lang.Long"/>
+	<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+	<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+	<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+	<field name="Bereich" class="java.lang.String"/>
+	<sortField name="teZeitstempel"/>
+	<variable name="dateformat" class="java.lang.String">
+		<variableExpression><![CDATA[$F{teZeitstempel1}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="474" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="56" backcolor="#8CA9BB" uuid="e422676d-3de8-4d9a-b6dc-d7c15190c3d7"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<image>
+				<reportElement x="476" y="0" width="177" height="57" uuid="b0e4b994-f2c0-4188-b0a7-8c7f993783a0"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="1" y="57" width="555" height="35" forecolor="#8CA9BB" uuid="ca7a5e1c-dcbc-453f-8553-289aa5f28927"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reporttitel}+": "+$F{name_des_mediums_des_elternobjektes}+"verbrauch "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="297" y="93" width="259" height="49" forecolor="#999999" uuid="9e34fad6-4564-4cff-a97b-c03ad08d44b0"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reportempfänger: "+$P{recepientName}+"\n"+"E-Mail: "+$P{emailrecepient}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="0" y="93" width="259" height="49" forecolor="#999999" uuid="92f98b45-ade1-46b3-97ea-ea4a734d0aa8"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reportersteller: "+$P{creatorName}+"\n"+"E-Mail: "+$P{emailcreator}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="142" width="556" height="22" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="f2467e54-6290-4f81-a25a-6ea3e2b2952b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Verbrauch: "+$F{name_des_mediums_des_elternobjektes}]]></textFieldExpression>
+			</textField>
+			<multiAxisChart>
+				<chart evaluationTime="Report" customizerClass="jasper.MultiLineChartCustomizer" renderType="draw" theme="aegean">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="164" width="556" height="296" uuid="943b0ace-218b-466e-b7d9-106cbce298d4"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<multiAxisPlot>
+					<plot/>
+					<axis>
+						<lineChart>
+							<chart evaluationTime="Report" renderType="draw" theme="aegean">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="9f1d15cc-9a32-4336-a90e-d2d048139f58"/>
+								<chartTitle color="#000000"/>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{obName}+"\nZeitraum: "+$F{teZeitraum}]]></seriesExpression>
+									<categoryExpression><![CDATA[new SimpleDateFormat($V{dateformat}).format($F{teZeitstempel2})]]></categoryExpression>
+									<valueExpression><![CDATA[$F{teWert}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<linePlot>
+								<plot/>
+								<categoryAxisLabelExpression><![CDATA["Zeitinterval: "+$F{teZeitmodus}]]></categoryAxisLabelExpression>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[( $F{unName}.equals("kWh")? "kW" : "kWh")]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</linePlot>
+						</lineChart>
+					</axis>
+					<axis>
+						<lineChart>
+							<chart evaluationTime="Report" renderType="draw" theme="aegean">
+								<reportElement x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="f5c97c85-5405-4988-950a-a5a79b0e8dbf"/>
+								<chartTitle color="#000000"/>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<dataset>
+									<datasetRun subDataset="Dataset2" uuid="40a92bf7-99c8-4059-befb-ee877772c781">
+										<datasetParameter name="obidDataset2">
+											<datasetParameterExpression><![CDATA[$P{obid2}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitmodus">
+											<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+										</datasetParameter>
+										<datasetParameter name="zeitstempelDataset2">
+											<datasetParameterExpression><![CDATA[$P{zeitstempel2}]]></datasetParameterExpression>
+										</datasetParameter>
+										<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+									</datasetRun>
+								</dataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{obName}+"\nZeitraum: "+$F{teZeitraum}]]></seriesExpression>
+									<categoryExpression><![CDATA[new SimpleDateFormat($V{dateformat}).format($F{teZeitstempel2})]]></categoryExpression>
+									<valueExpression><![CDATA[$F{teWert}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<linePlot>
+								<plot/>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[$F{unName}]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</linePlot>
+						</lineChart>
+					</axis>
+				</multiAxisPlot>
+			</multiAxisChart>
+			<line>
+				<reportElement x="1" y="90" width="564" height="1" forecolor="#000000" uuid="69790412-925d-4f2e-bd9d-d38bd9c3f6e5"/>
+				<graphicElement>
+					<pen lineWidth="1.75" lineStyle="Double" lineColor="#8CA9BB"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<pageFooter>
+		<band height="29" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="455" y="0" width="100" height="20" forecolor="#999999" backcolor="#FFFFFF" uuid="7223ee11-0928-43f0-a33a-49256674aa7e"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="1" y="0" width="100" height="20" forecolor="#999999" backcolor="#FFFFFF" uuid="8eeb41bf-bbd3-41f8-a820-f82fbead9c59"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="10" width="100" height="24" forecolor="#8CA9BB" backcolor="#FFFFFF" uuid="d77d4e85-112b-43c6-af7f-e9174878c344"/>
+				<textElement textAlignment="Left" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="true" isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Kommentar:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="102" y="10" width="454" height="24" forecolor="#CCCCCC" uuid="801691bb-7072-4641-8a9d-69245157c58b"/>
+				<textFieldExpression><![CDATA[$P{comment}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="564" height="1" forecolor="#000000" uuid="ba5a2682-af30-404c-a958-67b8f6f05c2f"/>
+				<graphicElement>
+					<pen lineWidth="1.75" lineStyle="Double" lineColor="#8CA9BB"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EnergyConsumptionReport_mitListe1" pageWidth="595" pageHeight="842" columnWidth="550" leftMargin="25" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="68f781ad-dbe4-4ba7-8619-c679bcdac621">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="PieChart" uuid="bde88541-c307-493a-becd-84b960cbc72d">
+		<parameter name="obid" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="medium" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitstempel" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2014-07-14"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zeitmodus" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT obid,unName, obMedium, obAbkuerzung,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempel}, obid, $P{zeitmodus}, 1)) as Verbrauch,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 1)) as Zeitstempel,
+(select Verbrauch*kosten_des_mediums_des_elternobjektes) as KostenMonat
+FROM objekt, unit, media
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{medium}) and obEinheitZ = unId and obMedium=meId]]>
+		</queryString>
+		<field name="obid" class="java.lang.Long">
+			<fieldDescription><![CDATA[Eindeutige Id des Objektes]]></fieldDescription>
+		</field>
+		<field name="unName" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="obMedium" class="java.lang.Long">
+			<fieldDescription><![CDATA[Verweis auf Medium der Messstelle]]></fieldDescription>
+		</field>
+		<field name="obAbkuerzung" class="java.lang.String">
+			<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="obname" class="java.lang.String">
+			<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+		</field>
+		<field name="get_tree(obid)" class="java.lang.String"/>
+		<field name="id_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_elternobjektes" class="java.lang.String"/>
+		<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+		<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+		<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+		<field name="Verbrauch" class="java.lang.Double"/>
+		<field name="Zeitstempel" class="java.lang.String"/>
+		<field name="KostenMonat" class="java.lang.Double"/>
+	</subDataset>
+	<parameter name="reporttitel" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["EnergyWeb Report"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="creatorName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Inna Nickel"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="recepientName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Julian Gabriel"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="obid" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[144]]></defaultValueExpression>
+	</parameter>
+	<parameter name="comment" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Hier ist der Platz für Ihre Kommentare"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="medium" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[25]]></defaultValueExpression>
+	</parameter>
+	<parameter name="zeitstempel" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["2014-07-14"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="zeitmodus" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="emailcreator" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["info@tenag.de"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="emailrecepient" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["info@tenag.de"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\inickel\\TENAG_Logo.JPG"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT obid,unName, obAbkuerzung,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempel},obid, $P{zeitmodus}, 2)) as Verbrauch,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 1)) as Heute,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 2)) as Zeitstempel,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 2)) as ZeitstempelVorperiode,
+(select Verbrauch*kosten_des_mediums_des_elternobjektes) as KostenMonat,
+(select obName from objekt where obid=$P{obid}) as Bereich
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{medium}) and obEinheitZ = unId
+union all
+SELECT obid,unName,obAbkuerzung,
+obname,
+get_tree(obid),
+obElternobjekt as id_des_elternobjektes,
+(select obname from objekt where obId = id_des_elternobjektes) as name_des_elternobjektes,
+(select obmedium from objekt where obid = id_des_elternobjektes) as medienid_des_elternobjektes,
+(select mename from media where meid = medienid_des_elternobjektes) as name_des_mediums_des_elternobjektes,
+(select mekosten from media where meid = medienid_des_elternobjektes) as kosten_des_mediums_des_elternobjektes,
+(select get_diff($P{zeitstempel},obid, $P{zeitmodus}, 1)) as Verbrauch,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 1)) as Heute,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 1)) as Zeitstempel,
+(select get_timestamp($P{zeitstempel}, $P{zeitmodus}, 2)) as ZeitstempelVorperiode,
+(select Verbrauch*kosten_des_mediums_des_elternobjektes) as KostenMonat,
+(select obName from objekt where obid=$P{obid}) as Bereich
+FROM objekt, unit
+where obart=3
+and
+obDatenbasis != 3
+and
+get_tree(obid) like concat('%$', $P{obid},'$%') and get_medium(obid, $P{medium}) and obEinheitZ = unId]]>
+	</queryString>
+	<field name="obid" class="java.lang.Long">
+		<fieldDescription><![CDATA[Eindeutige Id des Objektes]]></fieldDescription>
+	</field>
+	<field name="unName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="obAbkuerzung" class="java.lang.String">
+		<fieldDescription><![CDATA[Abkuerzung des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+	</field>
+	<field name="obname" class="java.lang.String">
+		<fieldDescription><![CDATA[Name des Objektes, der Messstelle oder des Messwertes]]></fieldDescription>
+	</field>
+	<field name="get_tree(obid)" class="java.lang.String"/>
+	<field name="id_des_elternobjektes" class="java.lang.Long"/>
+	<field name="name_des_elternobjektes" class="java.lang.String"/>
+	<field name="medienid_des_elternobjektes" class="java.lang.Long"/>
+	<field name="name_des_mediums_des_elternobjektes" class="java.lang.String"/>
+	<field name="kosten_des_mediums_des_elternobjektes" class="java.lang.Double"/>
+	<field name="Verbrauch" class="java.lang.Double"/>
+	<field name="Heute" class="java.lang.String"/>
+	<field name="Zeitstempel" class="java.lang.String"/>
+	<field name="ZeitstempelVorperiode" class="java.lang.String"/>
+	<field name="KostenMonat" class="java.lang.Double"/>
+	<field name="Bereich" class="java.lang.String"/>
+	<variable name="total" class="java.lang.Integer" resetType="Group" resetGroup="Liste" calculation="Sum">
+		<variableExpression><![CDATA[$F{Verbrauch}]]></variableExpression>
+	</variable>
+	<variable name="totalCosts" class="java.lang.Integer" resetType="Group" resetGroup="Liste" calculation="Sum">
+		<variableExpression><![CDATA[$F{KostenMonat}.intValue()]]></variableExpression>
+	</variable>
+	<variable name="zeitstempel" class="java.lang.String" resetType="Group" resetGroup="Zeitstempel">
+		<variableExpression><![CDATA[$F{Zeitstempel}]]></variableExpression>
+	</variable>
+	<group name="Liste" minHeightToStartNewPage="90" keepTogether="true">
+		<groupExpression><![CDATA[$F{Zeitstempel}]]></groupExpression>
+		<groupHeader>
+			<band height="52" splitType="Stretch">
+				<textField evaluationTime="Report">
+					<reportElement mode="Opaque" x="1" y="0" width="555" height="20" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="92aa35ef-ea99-40b4-8b93-c2dcb185b469"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Verbrauchsübersicht: "+$V{zeitstempel}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="40" width="556" height="1" forecolor="#000000" uuid="1a4652b8-4cb9-40d8-b820-283d05fd1da0"/>
+					<graphicElement>
+						<pen lineWidth="1.75" lineStyle="Double" lineColor="#8CA9BB"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="487" y="19" width="68" height="20" forecolor="#999999" uuid="a7dce0e3-dd30-49b6-83cc-b13219ba0847"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Kosten]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="83" y="20" width="69" height="20" forecolor="#999999" uuid="3ad95ef5-ef5b-4c70-9483-6d8c9c725bd9"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Messtelle]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="1" y="20" width="71" height="19" forecolor="#999999" backcolor="#8CA9BB" uuid="65c9dc38-af9d-4886-9621-fc6032449a0c"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Arial" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Objekt ID]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="375" y="19" width="69" height="20" forecolor="#999999" uuid="542e966c-335a-4f70-b5bd-bece04fa765b"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Verbrauch]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="205" y="19" width="69" height="20" forecolor="#999999" backcolor="#8CA9BB" uuid="807349ea-7a1f-44fd-86ec-f67613eb6198"/>
+					<textElement verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Arial" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Messung]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25" splitType="Stretch">
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="0" y="1" width="72" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="95fd68dd-3416-4674-9901-b2e429616d1e"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
+						<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA["-"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="205" y="0" width="69" height="20" uuid="a29b6a32-f265-4b46-96dc-c293df998b30"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Summe"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="">
+					<reportElement x="375" y="1" width="69" height="20" uuid="267c91f5-605f-4844-931c-c4b67db69867"/>
+					<textElement>
+						<font fontName="Arial" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.text.DecimalFormat(",###.##").format($V{total})+" "+$F{unName}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Report" pattern="">
+					<reportElement x="471" y="0" width="68" height="20" uuid="97c4d13b-0dea-4b53-b334-aaeec45b1c21"/>
+					<textElement>
+						<font fontName="Arial" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.text.DecimalFormat(",###.##").format($V{totalCosts})+" "+java.util.Currency.getInstance(Locale.GERMANY).getSymbol()]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="556" height="1" forecolor="#000000" uuid="607f870a-7950-441c-bd1e-0fa7c5a2fe52"/>
+					<graphicElement>
+						<pen lineWidth="1.75" lineStyle="Double" lineColor="#8CA9BB"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Zeitstempel" keepTogether="true">
+		<groupExpression><![CDATA[$F{Zeitstempel}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="617" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="56" backcolor="#8CA9BB" uuid="3f0d79a2-922a-47e3-9dc4-07a1867c93ee"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="1" y="57" width="555" height="38" forecolor="#8CA9BB" uuid="173cb58e-bdf7-42ee-b71c-a2121c3a0404"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reporttitel}+": "+$F{Bereich}+" "+$F{name_des_mediums_des_elternobjektes}+"verbrauch"+"\nBerichtszeitraum "+$F{ZeitstempelVorperiode}+" - "+$F{Heute}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="280" y="100" width="272" height="50" forecolor="#999999" uuid="3f3962bd-6dd0-43d2-b28c-f0cfcb7a3fb3"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reportempfänger: "+$P{recepientName}+"\n"+"E-Mail: "+$P{emailrecepient}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement x="1" y="99" width="277" height="51" forecolor="#999999" uuid="18119d92-41a6-49c3-88b7-82fe1fd057d0"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reportersteller: "+$P{creatorName}+"\n"+"E-Mail: "+$P{emailcreator}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="95" width="555" height="1" forecolor="#8CA9BB" uuid="f1c54e4a-25b6-4686-92b3-5b772a82ffcc"/>
+				<graphicElement>
+					<pen lineWidth="1.75"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="150" width="556" height="20" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="4d636737-685e-4bf6-a227-5e5119109661"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Energieverbrauch / Energiekosten"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="280" y="381" width="276" height="21" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="e9e5c997-ca87-42e4-897b-58427406f356"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Aktuelle Kosten: "+$F{name_des_mediums_des_elternobjektes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1" y="380" width="276" height="22" forecolor="#FFFFFF" backcolor="#8CA9BB" uuid="015d5f28-443d-4995-8532-4f131a55a5af"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Aktueller Verbrauch: "+$F{name_des_mediums_des_elternobjektes}+" ("+$F{unName}+")"]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="475" y="0" width="182" height="57" uuid="f8c23c16-8327-4477-98c1-56855fba1494"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+				<anchorNameExpression><![CDATA[$P{logo}]]></anchorNameExpression>
+			</image>
+			<pieChart>
+				<chart evaluationTime="Report" customizerClass="jasper.PieLabels" renderType="draw" theme="aegean">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="1" y="402" width="276" height="201" uuid="2b4650ea-d429-4839-8594-b04857760c4b"/>
+					<chartTitle color="#000000">
+						<font fontName="Arial" size="5"/>
+						<titleExpression><![CDATA[$F{Heute}]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend position="Right">
+						<font fontName="Arial" size="5"/>
+					</chartLegend>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<incrementWhenExpression><![CDATA[$F{Verbrauch}!=0]]></incrementWhenExpression>
+						<datasetRun subDataset="PieChart" uuid="e96db0c9-a042-4bfd-81ab-e9a09fb34deb">
+							<datasetParameter name="obid">
+								<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="medium">
+								<datasetParameterExpression><![CDATA[$P{medium}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="zeitstempel">
+								<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="zeitmodus">
+								<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{obAbkuerzung}]]></keyExpression>
+					<valueExpression><![CDATA[$F{Verbrauch}]]></valueExpression>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel>
+						<font fontName="Arial" size="4"/>
+					</itemLabel>
+				</piePlot>
+			</pieChart>
+			<pieChart>
+				<chart evaluationTime="Report" customizerClass="jasper.PieLabelsCosts" renderType="draw" theme="aegean">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="280" y="402" width="276" height="201" uuid="02b2dce3-1c13-43bf-9152-e48341cf865d"/>
+					<chartTitle color="#000000">
+						<font fontName="Arial" size="5"/>
+						<titleExpression><![CDATA[$F{Heute}]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend position="Right">
+						<font fontName="Arial" size="4"/>
+					</chartLegend>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<incrementWhenExpression><![CDATA[$F{KostenMonat}!=0]]></incrementWhenExpression>
+						<datasetRun subDataset="PieChart" uuid="7def535d-529f-43b5-ad80-0ff1142ccd01">
+							<datasetParameter name="obid">
+								<datasetParameterExpression><![CDATA[$P{obid}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="medium">
+								<datasetParameterExpression><![CDATA[$P{medium}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="zeitstempel">
+								<datasetParameterExpression><![CDATA[$P{zeitstempel}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="zeitmodus">
+								<datasetParameterExpression><![CDATA[$P{zeitmodus}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{obAbkuerzung}]]></keyExpression>
+					<valueExpression><![CDATA[$F{KostenMonat}]]></valueExpression>
+					<labelExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{KostenMonat})+" €"]]></labelExpression>
+				</pieDataset>
+				<piePlot labelFormat="{1}">
+					<plot/>
+					<itemLabel>
+						<font fontName="Arial" size="4"/>
+					</itemLabel>
+				</piePlot>
+			</pieChart>
+			<multiAxisChart>
+				<chart evaluationTime="Report" customizerClass="jasper.MultiLineChartCustomizerBarChart" renderType="draw" theme="aegean">
+					<reportElement x="0" y="170" width="555" height="201" uuid="85e3e938-6d88-4a9d-8593-edccf41f4fa5"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<multiAxisPlot>
+					<plot/>
+					<axis>
+						<barChart>
+							<chart evaluationTime="Report" renderType="draw" theme="aegean">
+								<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="28722add-4e78-4344-8953-62fa778050f1"/>
+								<chartTitle color="#000000">
+									<titleExpression><![CDATA[$F{name_des_mediums_des_elternobjektes}]]></titleExpression>
+								</chartTitle>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{Verbrauch}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[$F{unName}]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+					<axis>
+						<barChart>
+							<chart customizerClass="jasper.MultiAxisBarChartCustomizer" renderType="draw" theme="aegean">
+								<reportElement x="0" y="0" width="0" height="0" backcolor="#FFFFFF" uuid="faf3c62b-4f91-42fc-9e14-79db78f6bd9c"/>
+								<chartTitle color="#000000"/>
+								<chartSubtitle color="#000000"/>
+								<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+							</chart>
+							<categoryDataset>
+								<categorySeries>
+									<seriesExpression><![CDATA[$F{Zeitstempel}]]></seriesExpression>
+									<categoryExpression><![CDATA[$F{obAbkuerzung}]]></categoryExpression>
+									<valueExpression><![CDATA[$F{KostenMonat}]]></valueExpression>
+								</categorySeries>
+							</categoryDataset>
+							<barPlot>
+								<plot/>
+								<itemLabel/>
+								<categoryAxisFormat>
+									<axisFormat/>
+								</categoryAxisFormat>
+								<valueAxisLabelExpression><![CDATA[java.util.Currency.getInstance(Locale.GERMANY).getSymbol()]]></valueAxisLabelExpression>
+								<valueAxisFormat>
+									<axisFormat/>
+								</valueAxisFormat>
+							</barPlot>
+						</barChart>
+					</axis>
+				</multiAxisPlot>
+			</multiAxisChart>
+		</band>
+	</title>
+	<detail>
+		<band height="38">
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="471" y="0" width="86" height="20" uuid="56d79fd2-738f-4a02-b77e-d5b121a8d9ef"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat(",###.##").format($F{KostenMonat})+" "+java.util.Currency.getInstance(Locale.GERMANY).getSymbol()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="375" y="0" width="82" height="20" uuid="49c91cd9-2a16-4421-9c7a-d86c69f28aed"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat(",###.##").format($F{Verbrauch})+" "+$F{unName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="83" y="0" width="105" height="20" backcolor="#8CA9BB" uuid="05d84623-e8d3-41dd-a6bd-4dab762e0e4d"/>
+				<textElement>
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name_des_elternobjektes}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="205" y="0" width="151" height="20" uuid="bd8d36d8-9c5b-4276-8521-c35f2d85e253"/>
+				<textElement>
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="71" height="20" backcolor="#8CA9BB" uuid="cb46ddf8-759a-4b1b-9a6f-fb4e5c900057"/>
+				<textElement>
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obid}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="524" y="0" width="31" height="20" forecolor="#8CA9BB" uuid="cf369162-ce0b-4477-a706-4869f737d1ee"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="1" y="0" width="103" height="20" forecolor="#8CA9BB" uuid="f87b08d1-5615-45b6-ba76-3168ae3fb506"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="39" splitType="Stretch">
+			<textField>
+				<reportElement x="102" y="9" width="455" height="24" forecolor="#CCCCCC" uuid="9702356c-ba7d-435c-bcb6-2477e901c136"/>
+				<textFieldExpression><![CDATA[$P{comment}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="9" width="100" height="24" forecolor="#8CA9BB" backcolor="#FFFFFF" uuid="c2118e7c-b019-4d2a-9e62-66ee96251b96"/>
+				<textElement textAlignment="Left" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="true" isItalic="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Kommentar:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" forecolor="#8CA9BB" uuid="e27b156c-8dfd-43fd-b439-424133e81f91"/>
+				<graphicElement>
+					<pen lineWidth="1.75" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
